@@ -18,7 +18,7 @@ stat_to_prob <- function(n) {
 # |   s < t     | 5+ |
 # |   s <= t/2  | 6+ |
 # +------------------+
-hit_to_wound_prob <- function(s, t) {
+get_wound_prob <- function(s, t) {
   if (s >= 2*t) {
     return(stat_to_prob(2))
   }
@@ -41,19 +41,22 @@ hit_to_wound_prob <- function(s, t) {
 #----------------------------------------------------------------------------------
 
 # Target's wounds
-target_w = 5
+target_w = 10
 
 # Number of attacks the attacker has
-attacks = 7
+attacks = 10
 # Attacks hit on attacker_skill or higher on d6
 attacker_skill = 3
 
 # Stats to determine if hits wound
-attacker_str = 3
-target_tough = 3
+attacker_str = 6
+target_tough = 4
+
+# Damage characteristic of attacks
+damage = 2
 
 # Armor piercing subtracts from roll (increases roll required)
-attack_ap = -1
+attack_ap = -3
 # Save stats shows required die roll to resist an incoming wound, 1 always fails
 target_sv = 3
 
@@ -65,7 +68,10 @@ target_sv = 3
 # to calculate the chance of inflicting target_w wounds
 #----------------------------------------------------------------------------------
 
-wound_prob = (stat_to_prob(attacker_skill) * hit_to_wound_prob(attacker_str, target_tough) * stat_to_prob(target_sv - attack_ap))
+# Probability to hit attack * probability to wound * probability to fail save
+damage_prob = stat_to_prob(attacker_skill) * get_wound_prob(attacker_str, target_tough) * (1 - stat_to_prob(target_sv - attack_ap))
 
-print("Probability of killing target unit:")
-print(1 - pbinom(target_w - 1, attacks, wound_prob))
+hits_required = ceiling(target_w / damage)
+
+print("Probability of killing target unit with 1 attack sequence:")
+print(1 - pbinom(hits_required - 1, attacks, damage_prob))
