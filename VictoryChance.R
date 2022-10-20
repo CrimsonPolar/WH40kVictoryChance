@@ -2,7 +2,7 @@
 # Helpful functions
 #----------------------------------------------------------------------------------
 
-# Function that calculates the chance of rolling n on 1d6
+# Function that calculates the chance of rolling >=n on 1d6
 stat_to_prob <- function(n) {
   return((7-n)/6)
 }
@@ -34,6 +34,10 @@ get_wound_prob <- function(s, t) {
   else if (s <= t/2) {
     return(stat_to_prob(6))
   }
+  else {
+    # Shouldn't ever be here, but just for the sake of covering all possibilities
+    return(0)
+  }
 }
 
 #----------------------------------------------------------------------------------
@@ -56,7 +60,7 @@ target_tough = 4
 damage = 2
 
 # Armor piercing subtracts from roll (increases roll required)
-attack_ap = -3
+attack_ap = -2
 # Save stats shows required die roll to resist an incoming wound, 1 always fails
 target_sv = 3
 
