@@ -28,10 +28,10 @@ get_wound_prob <- function(s, t) {
   else if (s == t) {
     return(stat_to_prob(4))
   }
-  else if (s < t) {
+  else if (s <= t/2) {
     return(stat_to_prob(5))
   }
-  else if (s <= t/2) {
+  else if (s == t) {
     return(stat_to_prob(6))
   }
   else {
